@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.14)
+project(balagur_dungeon_editor)
+set(CMAKE_CXX_STANDARD 17)
+if(MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+endif()
+add_library(editor_lib src/editor.cpp)
+target_include_directories(editor_lib PUBLIC src)
+enable_testing()
+include(FetchContent)
+set(gtest_force_shared_crt ON)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
+)
+FetchContent_MakeAvailable(googletest)
+add_executable(tests tests/test_editor.cpp)
+target_link_libraries(tests PRIVATE editor_lib GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(tests)
